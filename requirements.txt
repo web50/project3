@@ -1,0 +1,1 @@
+pip install Django==2.0.3
