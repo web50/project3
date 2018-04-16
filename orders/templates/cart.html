@@ -1,0 +1,102 @@
+{% extends 'visitor.html' %}
+{% block title %}Cart{% endblock %}
+{% block cart_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid pizza-container">
+    <div class="row">
+        <div class="col-sm-8 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if pizza %}
+                        <h4>You Have Chosen</h4>
+                        <ul>
+                            <li><b>Pizza:</b> {{ pizza.type.description }}</li>
+                            <li><b>With:</b> {{ pizza.option.description }}</li>
+                            <li><b>Size:</b> {{ pizza.size.description }}</li>
+                            <li><b>Price:</b> {{ pizza.price }}</li>
+                        </ul>
+                    {% elif salad %}
+                        <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <h4>You Have Chosen</h4>
+                                <ul>
+                                    <li><b>Salad:</b> {{ salad.description }}</li>
+                                    <li><b>Price:</b> {{ salad.price }}</li>
+                                </ul>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% elif pasta %}
+                        <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <h4>You Have Chosen</h4>
+                                <ul>
+                                    <li><b>Pasta:</b> {{ pasta.description }}</li>
+                                    <li><b>Price:</b> {{ pasta.price }}</li>
+                                </ul>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% elif plate %}
+                        <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <h4>You Have Chosen</h4>
+                                <ul>
+                                    <li><b>Plate:</b> {{ plate.type.description }}</li>
+                                    <li><b>Plate:</b> {{ plate.size.description }}</li>
+                                    <li><b>Price:</b> {{ plate.price }}</li>
+                                </ul>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+                    <a href="{% url 'orders:index' %}">Back to Menu</a>
+                </div>
+            </div>
+        </div>
+        {% if pizza %}
+        <div class="col-sm-4 col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if error %}
+                        <p><strong>{{ error }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if pizza.option.number_of_topings != 0%}
+                            <h4>Please Select Pizza Toppings</h4>
+                            <ul>
+                                {% for topping in form.toppings.field.choices %}
+                                    <li>
+                                        <input type="checkbox" name="toppings" value="{{topping}}"/> {{ topping }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                           <h4>No Toppings to Select</h4>
+                        {% endif %}
+                        <div class="form-group">
+                            <div class='wrapper text-center'>
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
