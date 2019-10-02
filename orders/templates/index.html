@@ -1,0 +1,125 @@
+{% extends 'visitor.html' %}
+{% block menu_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid pizza-container">
+       <div class="row">
+           <div class="col-sm-8 col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% for type in types %}
+                            <h3>{{ type.description }}</h3>
+                            <table class="table">
+                                <tr>
+                                    <td></td>
+                                    {% for size in sizes %}
+                                        <th scope="col">
+                                            {{ size.description}}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                                <tbody>
+                                    {% for option in options %}
+                                        <tr>
+                                            <th scope="row">
+                                                {{ option.description}}
+                                            </th>
+                                            {% for pizza in pizzas %}
+                                                {% if pizza.option.description == option.description and pizza.type.description == type.description%}
+                                                    <td><a href="{% url 'orders:process_order' pizza.id "pizza"%}">{{pizza.price}}</a></td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Toppings</h3>
+                        <ul>
+                            {% for topping in toppings %}
+                                <li>{{ topping.description }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-8 col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Pasta</h3>
+                        <table class="table">
+                            <tbody>
+                                {% for pasta in pastas %}
+                                    <tr>
+                                        <td><b>{{pasta.description}}</b></td>
+                                        <td><a href="{% url 'orders:process_order' pasta.id "pasta"%}">{{pasta.price}}</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-8 col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Salads</h3>
+                        <table class="table">
+                            <tbody>
+                                {% for salad in salads %}
+                                    <tr>
+                                        <td><b>{{salad.description}}</b></td>
+                                        <td><a href="{% url 'orders:process_order' salad.id "salad"%}">{{salad.price}}</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-8 col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                            <h3>Dinner Plates</h3>
+                            <table class="table">
+                                <tr>
+                                    <td></td>
+                                    {% for size in sizes %}
+                                        <th scope="col">
+                                            {{ size.description}}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                                <tbody>
+                                    {% for plate in plates %}
+                                        <tr>
+                                            <th scope="row">
+                                                {{ plate.description}}
+                                            </th>
+                                            {% for item in items %}
+                                                {% if item.type.description == plate.description %}
+                                                    <td><a href="{% url 'orders:process_order' item.id "plate" %}">{{item.price}}</a></td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+       </div>
+</div>
+{% endblock %}

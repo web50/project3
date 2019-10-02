@@ -1,0 +1,102 @@
+{% extends 'visitor.html' %}
+{% block title %}Cart{% endblock %}
+{% block cart_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid pizza-container">
+    {% if order %}
+        <div class="row">
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-horizontal" role="form" action="{% url 'orders:process_cart' order.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                <h4>Please Review Your Order</h4>
+                                <ul>
+                                    <li>Order ID: {{ order.id }}</li>
+                                    <li>Total: {{ order.total }}</li>
+                                </ul>
+                                <div class="form-group">
+                                    <div class='wrapper text-center'>
+                                        <button type="submit" class="btn btn-success">Purchase</button>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-sm-8 col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if error %}
+                        <p><strong>{{ error }}</strong></p>
+                    {% endif %}
+                    {% if order %}
+                        {% for pizza_assembly in order.pizzas_assemblies.all %}
+                            <div class="card card-cascade wider">
+                                <div class="card-body text-center">
+                                    <div class="col-xs-6 col-md-4">
+                                            <img src="https://www.cicis.com/media/1176/pizza_trad_pepperonibeef.png" alt="Card image" class="img-thumbnail">
+                                            <p class="card-title"><b>{{ pizza_assembly.pizza.type.description }}</b> </p>
+                                            <p class="card-text">Size: {{ pizza_assembly.pizza.size.description }}  </p>
+                                            <p class="card-text">Price: {{ pizza_assembly.pizza.price }}  </p>
+                                            {% for topping in pizza_assembly.toppings.all %}
+                                                <p class="card-text">{{ topping.description}} </p>
+                                            {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for salad in order.salads.all %}
+                            <div class="card card-cascade wider">
+                                <div class="card-body text-center">
+                                    <div class="col-xs-6 col-md-4">
+                                        <img src="https://www.cicis.com/media/1235/saladbar_saladmix.png" alt="Card image" class="img-thumbnail">
+                                        <p class="card-title"><b>{{ salad.description }}</b> </p>
+                                        <p class="card-text">Price: {{ salad.price }}  </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for pasta in order.pastas.all %}
+                            <div class="card card-cascade wider">
+                                <div class="card-body text-center">
+                                    <div class="col-xs-6 col-md-4">
+                                        <img src="https://www.cicis.com/media/1234/saladbar_pastasalad.png" alt="Card image" class="img-thumbnail">
+                                        <p class="card-title"><b>{{ pasta.description }}</b> </p>
+                                        <p class="card-text">Price: {{ pasta.price }}  </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for plate in order.dinner_plates.all %}
+                            <div class="card card-cascade wider">
+                                <div class="card-body text-center">
+                                    <div class="col-xs-6 col-md-4">
+                                        <img src="https://www.cicis.com/media/1250/side_pastamarinara.png" alt="Card image" class="img-thumbnail">
+                                        <p class="card-title"><b>{{ plate.type.description }}</b> </p>
+                                        <p class="card-text">Price: {{ plate.size.price }}  </p>
+                                        <p class="card-text">Price: {{ plate.price }}  </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <form class="form-horizontal" role="form" action="{% url 'orders:clear_cart'%}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10 text-center">
+                                        <button type="submit" class="btn btn-success">Clear Cart</button>
+                                </div>
+                            </div>
+                            </form>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+                    <a href="{% url 'orders:index' %}">Back to Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

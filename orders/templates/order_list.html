@@ -1,0 +1,82 @@
+{% extends 'visitor.html' %}
+{% block title %}Orders{% endblock %}
+{% block order_active %}active{% endblock %}
+
+{% block body %}
+    <div class="container-fluid pizza-container">
+        <div class="col-sm-8 col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if error %}
+                        <p><strong>{{ error }}</strong></p>
+                    {% endif %}
+                    {% if orders %}
+                        <table class="table table-bordered sortable">
+                            <thead>
+                                <tr scope="column">
+                                    <th class="col-xs-1" data-field="ID" data-sortable="true">Order Number</th>
+                                    <th class="col-xs-1" data-field="Total" data-sortable="true">Order Total</th>
+                                    <th class="col-xs-1" data-field="Total" data-sortable="true">Order Items</th>
+                                    <th class="col-xs-1" data-field="Status" data-sortable="true">Order Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders%}
+                                    <tr id="tr-id-2" class="tr-class-2">
+                                        <td>{{ order.id }}</td>
+                                        <td>${{ order.total }}</td>
+                                        <td>
+                                            <ol>
+                                                {% for pizza_assembly in order.pizzas_assemblies.all %}
+                                                    <li>
+                                                        {{ pizza_assembly.pizza.type.description}},
+                                                        {{ pizza_assembly.pizza.size.description}},
+                                                        {{ pizza_assembly.pizza.option.description}},<br>
+                                                        {% for topping in pizza_assembly.toppings.all %}
+                                                            <ul>
+                                                                <li>{{ topping.description}}</li>
+                                                            </ul>
+                                                        {% endfor %}
+                                                        {% if pizza_assembly.toppings.all|length == 0 %}
+                                                            <ul>
+                                                                <li>No Toppings</li>
+                                                            </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                                {% for salad in order.salads.all %}
+                                                    <li>
+                                                        {{ salad.description}}
+                                                    </li>
+                                                {% endfor %}
+                                                {% for pasta in order.pastas.all %}
+                                                    <li>
+                                                        {{ pasta.description}}
+                                                    </li>
+                                                {% endfor %}
+                                                {% for plate in order.dinner_plates.all %}
+                                                    <li>
+                                                        {{ plate.type.description}},
+                                                        {{ plate.size.description}}
+                                                    </li>
+                                                {% endfor %}
+                                            </ol>
+                                        </td>
+                                        {% if order.is_complete == True %}
+                                            <td>Delivered</td>
+                                        {% else %}
+                                            <td>In Progress</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                <div class="panel-footer">
+                    <a href="{% url 'orders:index' %}">Back to Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
